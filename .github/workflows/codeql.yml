@@ -10,23 +10,19 @@ on:
 
 jobs:
   analyze:
-    name: Analyze (${{ matrix.language }})
     runs-on: ubuntu-latest
-    timeout-minutes: 120
-    permissions:
-      security-events: write
-      packages: read
-      contents: read
     strategy:
-      fail-fast: false
       matrix:
-        include:
-          - language: javascript-typescript
-            build-mode: none
-
+        language: [javascript-typescript]
+        build-mode: [none]
     steps:
-      - name: Checkout repository
-        uses: actions/checkout@v4
+      - uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '20.x'
+          cache: 'npm'
 
       - name: Initialize CodeQL
         uses: github/codeql-action/init@v3
@@ -34,9 +30,6 @@ jobs:
           languages: ${{ matrix.language }}
           build-mode: ${{ matrix.build-mode }}
           queries: security-extended,security-and-quality
-
-      # JavaScript/TypeScript 不需要 autobuild 或手動 build，
-      # 用 build-mode: none 即可進行語法解析及依賴資料庫建立
 
       - name: Perform CodeQL Analysis
         uses: github/codeql-action/analyze@v3

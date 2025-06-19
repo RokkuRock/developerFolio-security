@@ -23,13 +23,12 @@ jobs:
             build-mode: none
 
     steps:
-      - name: Checkout repository
-        uses: actions/checkout@v4
+      - uses: actions/checkout@v4
 
       - name: Setup Node.js
         uses: actions/setup-node@v3
         with:
-          node-version: '20.x'
+          node-version: '18.x'
           cache: 'npm'
 
       - name: Initialize CodeQL
